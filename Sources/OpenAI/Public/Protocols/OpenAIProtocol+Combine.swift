@@ -15,8 +15,8 @@ import Combine
 @available(watchOS 6.0, *)
 public extension OpenAIProtocol {
 
-    func completions(query: CompletionsQuery) -> AnyPublisher<CompletionsResult, Error> {
-        Future<CompletionsResult, Error> {
+    func completions(query: CompletionsQuery) -> AnyPublisher<(CompletionsResult, [AnyHashable: Any]?), Error> {
+        Future<(CompletionsResult, [AnyHashable: Any]?), Error> {
             completions(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
@@ -36,41 +36,41 @@ public extension OpenAIProtocol {
         return progress.eraseToAnyPublisher()
     }
 
-    func images(query: ImagesQuery) -> AnyPublisher<ImagesResult, Error> {
-        Future<ImagesResult, Error> {
+    func images(query: ImagesQuery) -> AnyPublisher<(ImagesResult, [AnyHashable: Any]?), Error> {
+        Future<(ImagesResult, [AnyHashable: Any]?), Error> {
             images(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
     }
     
-    func imageEdits(query: ImageEditsQuery) -> AnyPublisher<ImagesResult, Error> {
-        Future<ImagesResult, Error> {
+    func imageEdits(query: ImageEditsQuery) -> AnyPublisher<(ImagesResult, [AnyHashable: Any]?), Error> {
+        Future<(ImagesResult, [AnyHashable: Any]?), Error> {
             imageEdits(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
     }
     
-    func imageVariations(query: ImageVariationsQuery) -> AnyPublisher<ImagesResult, Error> {
-        Future<ImagesResult, Error> {
+    func imageVariations(query: ImageVariationsQuery) -> AnyPublisher<(ImagesResult, [AnyHashable: Any]?), Error> {
+        Future<(ImagesResult, [AnyHashable: Any]?), Error> {
             imageVariations(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
     }
 
-    func embeddings(query: EmbeddingsQuery) -> AnyPublisher<EmbeddingsResult, Error> {
-        Future<EmbeddingsResult, Error> {
+    func embeddings(query: EmbeddingsQuery) -> AnyPublisher<(EmbeddingsResult, [AnyHashable: Any]?), Error> {
+        Future<(EmbeddingsResult, [AnyHashable: Any]?), Error> {
             embeddings(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
     }
 
-    func chats(query: ChatQuery) -> AnyPublisher<ChatResult, Error> {
-        Future<ChatResult, Error> {
+    func chats(query: ChatQuery) -> AnyPublisher<(ChatResult, [AnyHashable: Any]?), Error> {
+        Future<(ChatResult, [AnyHashable: Any]?), Error> {
             chats(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
     }
-    
+    // TODO:
     func chatsStream(query: ChatQuery) -> AnyPublisher<Result<ChatStreamResult, Error>, Error> {
         let progress = PassthroughSubject<Result<ChatStreamResult, Error>, Error>()
         chatsStream(query: query) { result in
@@ -85,43 +85,43 @@ public extension OpenAIProtocol {
         return progress.eraseToAnyPublisher()
     }
     
-    func edits(query: EditsQuery) -> AnyPublisher<EditsResult, Error> {
-        Future<EditsResult, Error> {
+    func edits(query: EditsQuery) -> AnyPublisher<(EditsResult, [AnyHashable: Any]?), Error> {
+        Future<(EditsResult, [AnyHashable: Any]?), Error> {
             edits(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
     }
     
-    func model(query: ModelQuery) -> AnyPublisher<ModelResult, Error> {
-        Future<ModelResult, Error> {
+    func model(query: ModelQuery) -> AnyPublisher<(ModelResult, [AnyHashable: Any]?), Error> {
+        Future<(ModelResult, [AnyHashable: Any]?), Error> {
             model(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
     }
     
-    func models() -> AnyPublisher<ModelsResult, Error> {
-        Future<ModelsResult, Error> {
+    func models() -> AnyPublisher<(ModelsResult, [AnyHashable: Any]?), Error> {
+        Future<(ModelsResult, [AnyHashable: Any]?), Error> {
             models(completion: $0)
         }
         .eraseToAnyPublisher()
     }
     
-    func moderations(query: ModerationsQuery) -> AnyPublisher<ModerationsResult, Error> {
-        Future<ModerationsResult, Error> {
+    func moderations(query: ModerationsQuery) -> AnyPublisher<(ModerationsResult, [AnyHashable: Any]?), Error> {
+        Future<(ModerationsResult, [AnyHashable: Any]?), Error> {
             moderations(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
     }
 
-    func audioTranscriptions(query: AudioTranscriptionQuery) -> AnyPublisher<AudioTranscriptionResult, Error> {
-        Future<AudioTranscriptionResult, Error> {
+    func audioTranscriptions(query: AudioTranscriptionQuery) -> AnyPublisher<(AudioTranscriptionResult, [AnyHashable: Any]?), Error> {
+        Future<(AudioTranscriptionResult, [AnyHashable: Any]?), Error> {
             audioTranscriptions(query: query, completion: $0)
         }
         .eraseToAnyPublisher()
     }
 
-    func audioTranslations(query: AudioTranslationQuery) -> AnyPublisher<AudioTranslationResult, Error> {
-        Future<AudioTranslationResult, Error> {
+    func audioTranslations(query: AudioTranslationQuery) -> AnyPublisher<(AudioTranslationResult, [AnyHashable: Any]?), Error> {
+        Future<(AudioTranslationResult, [AnyHashable: Any]?), Error> {
             audioTranslations(query: query, completion: $0)
         }
         .eraseToAnyPublisher()

@@ -56,62 +56,65 @@ final public class OpenAI: OpenAIProtocol {
         self.init(configuration: configuration, session: session as URLSessionProtocol)
     }
     
-    public func completions(query: CompletionsQuery, completion: @escaping (Result<CompletionsResult, Error>) -> Void) {
+    public func completions(query: CompletionsQuery, completion: @escaping (Result<(CompletionsResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: JSONRequest<CompletionsResult>(body: query, url: buildURL(path: .completions)), completion: completion)
     }
     
+    // TODO:
     public func completionsStream(query: CompletionsQuery, onResult: @escaping (Result<CompletionsResult, Error>) -> Void, completion: ((Error?) -> Void)?) {
         performSteamingRequest(request: JSONRequest<CompletionsResult>(body: query.makeStreamable(), url: buildURL(path: .completions)), onResult: onResult, completion: completion)
     }
     
-    public func images(query: ImagesQuery, completion: @escaping (Result<ImagesResult, Error>) -> Void) {
+    public func images(query: ImagesQuery, completion: @escaping (Result<(ImagesResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: JSONRequest<ImagesResult>(body: query, url: buildURL(path: .images)), completion: completion)
     }
     
-    public func imageEdits(query: ImageEditsQuery, completion: @escaping (Result<ImagesResult, Error>) -> Void) {
+    public func imageEdits(query: ImageEditsQuery, completion: @escaping (Result<(ImagesResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: MultipartFormDataRequest<ImagesResult>(body: query, url: buildURL(path: .imageEdits)), completion: completion)
     }
     
-    public func imageVariations(query: ImageVariationsQuery, completion: @escaping (Result<ImagesResult, Error>) -> Void) {
+    public func imageVariations(query: ImageVariationsQuery, completion: @escaping (Result<(ImagesResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: MultipartFormDataRequest<ImagesResult>(body: query, url: buildURL(path: .imageVariations)), completion: completion)
     }
     
-    public func embeddings(query: EmbeddingsQuery, completion: @escaping (Result<EmbeddingsResult, Error>) -> Void) {
+    public func embeddings(query: EmbeddingsQuery, completion: @escaping (Result<(EmbeddingsResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: JSONRequest<EmbeddingsResult>(body: query, url: buildURL(path: .embeddings)), completion: completion)
     }
     
-    public func chats(query: ChatQuery, completion: @escaping (Result<ChatResult, Error>) -> Void) {
+    public func chats(query: ChatQuery, completion: @escaping (Result<(ChatResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: JSONRequest<ChatResult>(body: query, url: buildURL(path: .chats)), completion: completion)
     }
     
+    // TODO:
     public func chatsStream(query: ChatQuery, onResult: @escaping (Result<ChatStreamResult, Error>) -> Void, completion: ((Error?) -> Void)?) {
         performSteamingRequest(request: JSONRequest<ChatResult>(body: query.makeStreamable(), url: buildURL(path: .chats)), onResult: onResult, completion: completion)
     }
     
-    public func edits(query: EditsQuery, completion: @escaping (Result<EditsResult, Error>) -> Void) {
+    public func edits(query: EditsQuery, completion: @escaping (Result<(EditsResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: JSONRequest<EditsResult>(body: query, url: buildURL(path: .edits)), completion: completion)
     }
     
-    public func model(query: ModelQuery, completion: @escaping (Result<ModelResult, Error>) -> Void) {
+    public func model(query: ModelQuery, completion: @escaping (Result<(ModelResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: JSONRequest<ModelResult>(url: buildURL(path: .models.withPath(query.model)), method: "GET"), completion: completion)
     }
     
-    public func models(completion: @escaping (Result<ModelsResult, Error>) -> Void) {
+    public func models(completion: @escaping (Result<(ModelsResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: JSONRequest<ModelsResult>(url: buildURL(path: .models), method: "GET"), completion: completion)
     }
     
-    public func moderations(query: ModerationsQuery, completion: @escaping (Result<ModerationsResult, Error>) -> Void) {
+    public func moderations(query: ModerationsQuery, completion: @escaping (Result<(ModerationsResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: JSONRequest<ModerationsResult>(body: query, url: buildURL(path: .moderations)), completion: completion)
     }
     
-    public func audioTranscriptions(query: AudioTranscriptionQuery, completion: @escaping (Result<AudioTranscriptionResult, Error>) -> Void) {
+    public func audioTranscriptions(query: AudioTranscriptionQuery, completion: @escaping (Result<(AudioTranscriptionResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: MultipartFormDataRequest<AudioTranscriptionResult>(body: query, url: buildURL(path: .audioTranscriptions)), completion: completion)
     }
     
-    public func audioTranslations(query: AudioTranslationQuery, completion: @escaping (Result<AudioTranslationResult, Error>) -> Void) {
+    public func audioTranslations(query: AudioTranslationQuery, completion: @escaping (Result<(AudioTranslationResult, [AnyHashable: Any]?), Error>) -> Void) {
         performRequest(request: MultipartFormDataRequest<AudioTranslationResult>(body: query, url: buildURL(path: .audioTranslations)), completion: completion)
     }
     
+    // TODO:
     public func audioCreateSpeech(query: AudioSpeechQuery, completion: @escaping (Result<AudioSpeechResult, Error>) -> Void) {
         performSpeechRequest(request: JSONRequest<AudioSpeechResult>(body: query, url: buildURL(path: .audioSpeech)), completion: completion)
     }
@@ -120,12 +123,20 @@ final public class OpenAI: OpenAIProtocol {
 
 extension OpenAI {
 
-    func performRequest<ResultType: Codable>(request: any URLRequestBuildable, completion: @escaping (Result<ResultType, Error>) -> Void) {
+    func performRequest<ResultType: Codable>(request: any URLRequestBuildable, completion: @escaping (Result<(ResultType, [AnyHashable: Any]?), Error>) -> Void) {
         do {
             let request = try request.build(token: configuration.token, 
                                             organizationIdentifier: configuration.organizationIdentifier,
                                             timeoutInterval: configuration.timeoutInterval)
-            let task = session.dataTask(with: request) { data, _, error in
+            let task = session.dataTask(with: request) { data, response, error in
+                
+                var headers = [AnyHashable: Any]()
+                if let response {
+                    if let httpURLResponse = response as? HTTPURLResponse {
+                        headers = httpURLResponse.allHeaderFields
+                    }
+                }
+                
                 if let error = error {
                     completion(.failure(error))
                     return
@@ -138,7 +149,7 @@ extension OpenAI {
                 var apiError: Error? = nil
                 do {
                     let decoded = try JSONDecoder().decode(ResultType.self, from: data)
-                    completion(.success(decoded))
+                    completion(.success((decoded, headers)))
                 } catch {
                     apiError = error
                 }

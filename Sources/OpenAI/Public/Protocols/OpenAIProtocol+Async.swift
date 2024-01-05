@@ -14,7 +14,7 @@ import Foundation
 public extension OpenAIProtocol {
     func completions(
         query: CompletionsQuery
-    ) async throws -> CompletionsResult {
+    ) async throws -> (CompletionsResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             completions(query: query) { result in
                 switch result {
@@ -41,7 +41,7 @@ public extension OpenAIProtocol {
 
     func images(
         query: ImagesQuery
-    ) async throws -> ImagesResult {
+    ) async throws -> (ImagesResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             images(query: query) { result in
                 switch result {
@@ -56,7 +56,7 @@ public extension OpenAIProtocol {
     
     func imageEdits(
         query: ImageEditsQuery
-    ) async throws -> ImagesResult {
+    ) async throws -> (ImagesResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             imageEdits(query: query) { result in
                 switch result {
@@ -71,7 +71,7 @@ public extension OpenAIProtocol {
     
     func imageVariations(
         query: ImageVariationsQuery
-    ) async throws -> ImagesResult {
+    ) async throws -> (ImagesResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             imageVariations(query: query) { result in
                 switch result {
@@ -86,7 +86,7 @@ public extension OpenAIProtocol {
 
     func embeddings(
         query: EmbeddingsQuery
-    ) async throws -> EmbeddingsResult {
+    ) async throws -> (EmbeddingsResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             embeddings(query: query) { result in
                 switch result {
@@ -101,7 +101,7 @@ public extension OpenAIProtocol {
     
     func chats(
         query: ChatQuery
-    ) async throws -> ChatResult {
+    ) async throws -> (ChatResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             chats(query: query) { result in
                 switch result {
@@ -128,7 +128,7 @@ public extension OpenAIProtocol {
     
     func edits(
         query: EditsQuery
-    ) async throws -> EditsResult {
+    ) async throws -> (EditsResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             edits(query: query) { result in
                 switch result {
@@ -143,7 +143,7 @@ public extension OpenAIProtocol {
     
     func model(
         query: ModelQuery
-    ) async throws -> ModelResult {
+    ) async throws -> (ModelResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             model(query: query) { result in
                 switch result {
@@ -156,7 +156,7 @@ public extension OpenAIProtocol {
         }
     }
     
-    func models() async throws -> ModelsResult {
+    func models() async throws -> (ModelsResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             models() { result in
                 switch result {
@@ -171,7 +171,7 @@ public extension OpenAIProtocol {
     
     func moderations(
         query: ModerationsQuery
-    ) async throws -> ModerationsResult {
+    ) async throws -> (ModerationsResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             moderations(query: query) { result in
                 switch result {
@@ -201,7 +201,7 @@ public extension OpenAIProtocol {
     
     func audioTranscriptions(
         query: AudioTranscriptionQuery
-    ) async throws -> AudioTranscriptionResult {
+    ) async throws -> (AudioTranscriptionResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             audioTranscriptions(query: query) { result in
                 switch result {
@@ -216,7 +216,7 @@ public extension OpenAIProtocol {
     
     func audioTranslations(
         query: AudioTranslationQuery
-    ) async throws -> AudioTranslationResult {
+    ) async throws -> (AudioTranslationResult, [AnyHashable: Any]?) {
         try await withCheckedThrowingContinuation { continuation in
             audioTranslations(query: query) { result in
                 switch result {
